@@ -1,0 +1,6 @@
+{"jsonpaths": [
+    "$.emp_id",
+    "$.emp_name",
+    "$.emp_dept"
+ ]
+}
