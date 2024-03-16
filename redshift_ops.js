@@ -1,3 +1,5 @@
+// https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/redshift-data/
+
 import { RedshiftDataClient, ExecuteStatementCommand } from "@aws-sdk/client-redshift-data";
 
 // Replace all the constant as per your created attributes
