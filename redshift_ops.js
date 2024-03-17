@@ -1,5 +1,3 @@
-// https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/redshift-data/
-
 import { RedshiftDataClient, ExecuteStatementCommand } from "@aws-sdk/client-redshift-data";
 
 // Replace all the constant as per your created attributes
@@ -11,7 +9,7 @@ const S3_BUCKET = 's3-cdk-bucket-ar';
 const EMPLOYEE_JSON_PATH = `s3://${S3_BUCKET}/json/employee.json`;
 const EMPLOYEE_JSONPATH_JSON = `s3://${S3_BUCKET}/jsonpaths/employee_jsonpath.json`;
 const EMPLOYEE_REDSHIFT_JSON = `s3://${S3_BUCKET}/json/employee_redshift.json`;
-const KMS_KEY_ID = '52d5c391-ad6c-40df-a2c3-55f4578a8d25';
+const KMS_KEY_ID = '';
 
 async function executeSql(sql) {
   const client = new RedshiftDataClient({ region: REGION });
