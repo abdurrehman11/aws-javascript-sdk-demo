@@ -5,15 +5,20 @@ import { S3Client, PutObjectCommand, ListObjectVersionsCommand, DeleteObjectComm
 // Replace all the constant as per your created attributes
 const REGION = 'us-east-1';
 const BUCKET_NAME = 's3-cdk-bucket-ar';
+const GLUE_BUCKET_NAME = 's3-glue-bucket-ar';
 const DATA_DIR = './data/';
 const JSON_FILE = 'employee.json';
 const JSON_PATH_FILE = 'employee_jsonpath.json';
 
 const s3Client = new S3Client({ region: REGION });
 
-async function uploadFileToS3(bucketName, key, filePath) {
+async function uploadFileToS3(bucketName, key, filePath="") {
   try {
-    const fileContent = await fs.readFile(filePath, 'utf-8');
+    let fileContent = '';
+    if (filePath) {
+      fileContent = await fs.readFile(filePath, 'utf-8');
+    }
+    
     const params = {
       Bucket: bucketName,
       Key: key,
@@ -34,8 +39,16 @@ const jsonSchemaDataKey = `jsonpaths/${JSON_PATH_FILE}`;
 const jsonSchemaFilePath = `${DATA_DIR}${JSON_PATH_FILE}`;
 
 async function uploadDataToS3() {
-    uploadFileToS3(BUCKET_NAME, jsonDataKey, jsonDataFilePath);
-    uploadFileToS3(BUCKET_NAME, jsonSchemaDataKey, jsonSchemaFilePath);
+  uploadFileToS3(BUCKET_NAME, jsonDataKey, jsonDataFilePath);
+  uploadFileToS3(BUCKET_NAME, jsonSchemaDataKey, jsonSchemaFilePath);
+}
+
+async function uploadGlueDataToS3() {
+  uploadFileToS3(GLUE_BUCKET_NAME, 'employee_data/employee.csv', './data/employee.csv');
+  uploadFileToS3(GLUE_BUCKET_NAME, 'scripts/glue_employee_job.py', './glue_scripts/glue_employee_job.py');
+  uploadFileToS3(GLUE_BUCKET_NAME, 'output/');
+  uploadFileToS3(GLUE_BUCKET_NAME, 'temp/');
+  uploadFileToS3(GLUE_BUCKET_NAME, 'spark-logs/');
 }
 
 async function deleteDataFromS3Versioned() {
@@ -90,7 +103,9 @@ async function main() {
 
   if (action === 'upload') {
     await uploadDataToS3();
-  } else if (action === 'delete') {
+  } else if (action == 'upload-glue') {
+    await uploadGlueDataToS3();
+  }  else if (action === 'delete') {
     await deleteDataFromS3Versioned();
   } else {
     console.error(`Invalid action: ${action}. Please specify 'upload'', or 'delete'.`);
